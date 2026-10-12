@@ -63,7 +63,24 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const body = pm.response.json();",
+                  "if (body.request_id) {",
+                  "    pm.collectionVariables.set(\"requestId\", body.request_id);",
+                  "}"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Extract data from a URL",
@@ -97,7 +114,24 @@
               }
             }
           },
-          "response": []
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const body = pm.response.json();",
+                  "if (body.request_id) {",
+                  "    pm.collectionVariables.set(\"requestId\", body.request_id);",
+                  "}"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -123,7 +157,24 @@
             },
             "description": "Every Parser Template in the account, newest first."
           },
-          "response": []
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const items = pm.response.json().items || [];",
+                  "if (items.length && !pm.collectionVariables.get(\"templateId\")) {",
+                  "    pm.collectionVariables.set(\"templateId\", items[0].id);",
+                  "}"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Get a template",
@@ -144,7 +195,20 @@
             },
             "description": "One Parser Template, with its fields."
           },
-          "response": []
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -169,7 +233,20 @@
             },
             "description": "Page credit balance, plan and subscription status."
           },
-          "response": []
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -194,7 +271,20 @@
             },
             "description": "The last 10 extraction requests, newest first."
           },
-          "response": []
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Get an activity record",
@@ -215,7 +305,20 @@
             },
             "description": "One extraction request, including the extracted data."
           },
-          "response": []
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     }
@@ -236,6 +339,10 @@
     {
       "key": "fileUrl",
       "value": "https://example.com/invoice.pdf"
+    },
+    {
+      "key": "requestId",
+      "value": ""
     }
   ]
 }
