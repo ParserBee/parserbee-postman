@@ -1,0 +1,123 @@
+{
+  "info": {
+    "name": "ParserBee API",
+    "description": "Extract structured data from invoices, purchase orders, receipts, bank statements and other documents with the ParserBee API.\n\n1. Create a free account at https://app.parserbee.com/create-account (25 free pages, no credit card).\n2. Copy your API key from Settings and set the `apiKey` variable.\n3. Run **List templates** to pick up a template ID, then run **Extract data from a file**.\n\nAPI reference: https://app.parserbee.com/docs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-api-key",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}",
+        "type": "string"
+      },
+      {
+        "key": "in",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Extract",
+      "description": "Extract structured data from a document with a Parser Template. Each extraction costs 1 page credit per page processed (minimum 1).",
+      "item": [
+        {
+          "name": "Extract data from a file",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/extract",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "extract"
+              ]
+            },
+            "description": "Upload a PDF, scan or phone photo. Choose the file in the `file` row of the Body tab.\n\nThe extracted fields are in `data`. `usage` shows the pages processed and the page credits charged.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "template_id",
+                  "value": "{{templateId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": [],
+                  "description": "PDF, PNG, JPG, WebP or HEIC, up to 50 MB"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Extract data from a URL",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/extract",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "extract"
+              ]
+            },
+            "description": "Send a public link to the document instead of uploading it. The link must open without a login.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"template_id\": \"{{templateId}}\",\n  \"file_url\": \"{{fileUrl}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://app.parserbee.com"
+    },
+    {
+      "key": "apiKey",
+      "value": ""
+    },
+    {
+      "key": "templateId",
+      "value": ""
+    },
+    {
+      "key": "fileUrl",
+      "value": "https://example.com/invoice.pdf"
+    }
+  ]
+}
