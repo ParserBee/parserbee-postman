@@ -1,0 +1,787 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ParserBee API",
+    "version": "1.0.0",
+    "description": "ParserBee API allows you to extract structured data from documents (PDFs, images, Word, PowerPoint, Excel, and more) using custom templates.\n\n## Getting Started\n\n### 1. Create an Account\nSign up at [app.parserbee.com](https://app.parserbee.com/create-account) and verify your email address.\n\n### 2. Generate an API Key\n1. Log in to your [dashboard](https://app.parserbee.com/dashboard)\n2. Go to **Settings** from the sidebar\n3. Click **Generate API Key**\n4. Copy and securely store your API key (it starts with `pk_`)\n\n> **Important:** You can view your API key anytime from Settings. If you need to regenerate it, click **Regenerate API Key**, but note that the old key will be invalidated.\n\n### 3. Make Your First API Call\nUse your API key in the `x-api-key` header with every request:\n\n```bash\ncurl -X POST https://app.parserbee.com/api/v1/extract \\\n  -H \"x-api-key: pk_your_api_key_here\" \\\n  -F \"template_id=your_template_id\" \\\n  -F \"file=@invoice.pdf\"\n```\n\n## Authentication\nAll API endpoints require authentication via the `x-api-key` header. You can generate and manage your API key from the **Settings** page in your dashboard.\n\n## Rate Limits & Page Credits\nEach extraction costs **1 page credit per page processed**, with a minimum of 1. A single image or one-page document costs 1 page credit; a 10-page PDF costs 10. The exact count is returned in the response as `usage.pages_processed` and `usage.credits_charged`. Your page credit balance depends on your subscription plan. You can check your remaining page credits via the `/api/v1/credits` endpoint or from the dashboard.\n\n## Supported File Types\n\n**Documents**\n- PDF (`application/pdf`)\n- Word (`.doc`)\n- PowerPoint (`.pptx`, `.ppt`)\n- Excel (`.xlsx`)\n- OpenDocument Text (`.odt`)\n- Rich Text (`.rtf`)\n- Plain text (`.txt`)\n- CSV (`.csv`)\n- HTML (`.html`, `.htm`)\n- Email (`.eml`)\n\n**Images**\n- PNG (`image/png`)\n- JPEG (`image/jpeg`, `image/jpg`)\n- WebP (`image/webp`)\n- HEIC/HEIF (`image/heic`, `image/heif`)\n\nNot supported: Word (`.docx`), legacy Excel (`.xls`), OpenDocument Spreadsheet (`.ods`), and OpenDocument Presentation (`.odp`). Save a `.docx` as PDF before uploading.\n\nMaximum file size: **50 MB**",
+    "contact": {
+      "name": "ParserBee Support",
+      "email": "support@parserbee.com",
+      "url": "https://parserbee.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://app.parserbee.com",
+      "description": "Production server"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Extract",
+      "description": "Document extraction endpoints"
+    },
+    {
+      "name": "Credits",
+      "description": "Page credit balance and usage"
+    },
+    {
+      "name": "Activity",
+      "description": "Extraction activity and history"
+    },
+    {
+      "name": "Templates",
+      "description": "Extraction templates"
+    }
+  ],
+  "paths": {
+    "/api/v1/extract": {
+      "post": {
+        "tags": [
+          "Extract"
+        ],
+        "summary": "Extract data from a document",
+        "description": "Upload a document (PDF, image, Word, PowerPoint, Excel, CSV, TXT, RTF, ODT, HTML, or EML) and extract structured data using a template. Each extraction costs **1 page credit per page processed** (minimum 1).\n\nThe template defines the fields to extract. You must create a template first from the dashboard before using this endpoint.\n\n**Note:** You can provide either a `file` (upload) or `file_url` (URL to document). At least one is required.",
+        "operationId": "extractDocument",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "template_id"
+                ],
+                "properties": {
+                  "file_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "URL to the document file. Must be a publicly accessible URL. Supported formats: PDF, PNG, JPEG, WebP, HEIC, DOC, PPTX, PPT, XLSX, CSV, TXT, RTF, ODT, HTML, EML. Either `file` or `file_url` is required.",
+                    "example": "https://example.com/invoice.pdf"
+                  },
+                  "template_id": {
+                    "type": "string",
+                    "description": "The ID of the template to use for extraction. Get template IDs from the `/api/v1/templates` endpoint or from the dashboard.",
+                    "example": "abc123def456"
+                  }
+                }
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "template_id"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The document file to extract data from. Supported formats: PDF, PNG, JPEG, WebP. Max size: 50MB. Either `file` or `file_url` is required."
+                  },
+                  "file_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "URL to the document file. Must be a publicly accessible URL. Supported formats: PDF, PNG, JPEG, WebP, HEIC, DOC, PPTX, PPT, XLSX, CSV, TXT, RTF, ODT, HTML, EML. Either `file` or `file_url` is required.",
+                    "example": "https://example.com/invoice.pdf"
+                  },
+                  "template_id": {
+                    "type": "string",
+                    "description": "The ID of the template to use for extraction. Get template IDs from the `/api/v1/templates` endpoint or from the dashboard.",
+                    "example": "abc123def456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Extraction successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "request_id": {
+                      "type": "string",
+                      "example": "req_abc123"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Extracted data matching the template fields",
+                      "example": {
+                        "invoice_number": "INV-2026-001",
+                        "total_amount": 1500,
+                        "vendor_name": "Acme Corp"
+                      }
+                    },
+                    "credits_remaining": {
+                      "type": "integer",
+                      "example": 449
+                    },
+                    "processing_time_ms": {
+                      "type": "integer",
+                      "example": 2400
+                    },
+                    "usage": {
+                      "type": "object",
+                      "properties": {
+                        "pages_processed": {
+                          "type": "integer",
+                          "description": "Number of pages parsed in this document",
+                          "example": 1
+                        },
+                        "credits_charged": {
+                          "type": "integer",
+                          "description": "Page credits deducted for this extraction (1 per page processed, minimum 1)",
+                          "example": 1
+                        },
+                        "doc_size_bytes": {
+                          "type": "integer",
+                          "example": 204800
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request: missing file, invalid file type, or missing template_id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "missingFile": {
+                    "summary": "Missing file",
+                    "value": {
+                      "error": "File is required",
+                      "code": "MISSING_FILE"
+                    }
+                  },
+                  "missingTemplate": {
+                    "summary": "Missing template_id",
+                    "value": {
+                      "error": "template_id is required",
+                      "code": "MISSING_TEMPLATE_ID"
+                    }
+                  },
+                  "invalidFile": {
+                    "summary": "Invalid file type or size",
+                    "value": {
+                      "error": "Invalid file. Must be a supported document or image format, max 50MB",
+                      "code": "INVALID_FILE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized: invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "Invalid API key",
+                  "code": "INVALID_API_KEY"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment required: insufficient page credits",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "Insufficient page credits. Please upgrade your plan to get more page credits.",
+                  "code": "INSUFFICIENT_CREDITS",
+                  "credits_remaining": 0
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden: no active subscription, or the account is locked (code ACCOUNT_SUSPENDED)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "No active subscription. Please subscribe to use this API.",
+                  "code": "SUBSCRIPTION_INACTIVE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found: template not found or not owned by user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "Template not found or you don't have access to it",
+                  "code": "TEMPLATE_NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "Failed to process document",
+                  "code": "PROCESSING_FAILED"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/credits": {
+      "get": {
+        "tags": [
+          "Credits"
+        ],
+        "summary": "View remaining page credits",
+        "description": "Returns your current page credit balance, subscription plan, and billing period information.",
+        "operationId": "getCredits",
+        "responses": {
+          "200": {
+            "description": "Page credit information retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "credits_remaining": {
+                      "type": "integer",
+                      "description": "Number of page credits remaining",
+                      "example": 450
+                    },
+                    "credits_total": {
+                      "type": "integer",
+                      "description": "Total page credits for the billing period",
+                      "example": 500
+                    },
+                    "subscription_plan": {
+                      "type": "string",
+                      "enum": [
+                        "trial",
+                        "starter",
+                        "scale",
+                        "business"
+                      ],
+                      "example": "starter"
+                    },
+                    "subscription_status": {
+                      "type": "string",
+                      "enum": [
+                        "trial",
+                        "active",
+                        "canceled",
+                        "past_due",
+                        "incomplete",
+                        "suspended"
+                      ],
+                      "example": "active"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized: invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden: no active subscription, or the account is locked (code ACCOUNT_SUSPENDED)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/activity": {
+      "get": {
+        "tags": [
+          "Activity"
+        ],
+        "summary": "View recent activity",
+        "description": "Returns the last 10 document extraction requests, ordered by most recent first.",
+        "operationId": "getActivity",
+        "responses": {
+          "200": {
+            "description": "Activity list retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ActivitySummary"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of items returned",
+                      "example": 10
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized: invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden: no active subscription, or the account is locked (code ACCOUNT_SUSPENDED)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/activity/{id}": {
+      "get": {
+        "tags": [
+          "Activity"
+        ],
+        "summary": "View activity details",
+        "description": "Returns full details of a specific extraction request, including the extracted data.",
+        "operationId": "getActivityById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The activity/request ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "abc123def456"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Activity details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized: invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden: no active subscription, or the account is locked (code ACCOUNT_SUSPENDED)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found: activity record not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/templates": {
+      "get": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "List all templates",
+        "description": "Returns all extraction templates owned by the authenticated user.",
+        "operationId": "getTemplates",
+        "responses": {
+          "200": {
+            "description": "Templates list retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Template"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of templates",
+                      "example": 3
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized: invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden: no active subscription, or the account is locked (code ACCOUNT_SUSPENDED)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/templates/{id}": {
+      "get": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "View template details",
+        "description": "Returns details of a specific template. The template must belong to the authenticated user.",
+        "operationId": "getTemplateById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The template ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "tpl_abc123"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Template"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized: invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden: no active subscription, or the account is locked (code ACCOUNT_SUSPENDED)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found: template not found or not owned by user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key",
+        "description": "Your ParserBee API key. Generate one from **Settings** in your dashboard. The key starts with `pk_`."
+      }
+    },
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Human-readable error message"
+          },
+          "code": {
+            "type": "string",
+            "description": "Machine-readable error code"
+          }
+        },
+        "required": [
+          "error",
+          "code"
+        ]
+      },
+      "ActivitySummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique request ID",
+            "example": "abc123def456"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "processing",
+              "success",
+              "failed"
+            ],
+            "example": "success"
+          },
+          "file_name": {
+            "type": "string",
+            "description": "Name of the uploaded file",
+            "example": "invoice.pdf"
+          },
+          "file_type": {
+            "type": "string",
+            "description": "MIME type of the file",
+            "example": "application/pdf"
+          },
+          "file_size": {
+            "type": "integer",
+            "description": "File size in bytes",
+            "example": 204800
+          },
+          "template": {
+            "type": "string",
+            "description": "Template ID used for extraction",
+            "example": "tpl_xyz789"
+          },
+          "processing_time_ms": {
+            "type": "integer",
+            "description": "Processing time in milliseconds",
+            "example": 2400
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the request was created"
+          }
+        }
+      },
+      "ActivityDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique request ID",
+            "example": "abc123def456"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "processing",
+              "success",
+              "failed"
+            ],
+            "example": "success"
+          },
+          "file_name": {
+            "type": "string",
+            "example": "invoice.pdf"
+          },
+          "file_type": {
+            "type": "string",
+            "example": "application/pdf"
+          },
+          "file_size": {
+            "type": "integer",
+            "example": 204800
+          },
+          "template": {
+            "type": "string",
+            "example": "tpl_xyz789"
+          },
+          "processing_time_ms": {
+            "type": "integer",
+            "example": 2400
+          },
+          "extracted_data": {
+            "type": "object",
+            "description": "The structured data extracted from the document",
+            "example": {
+              "invoice_number": "INV-2026-001",
+              "total_amount": 1500,
+              "vendor_name": "Acme Corp"
+            }
+          },
+          "api_key_used": {
+            "type": "string",
+            "description": "Last 8 characters of the API key used",
+            "example": "****pk_x"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Template": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique template ID",
+            "example": "tpl_abc123"
+          },
+          "name": {
+            "type": "string",
+            "description": "Template name",
+            "example": "Invoice Template"
+          },
+          "description": {
+            "type": "string",
+            "description": "Template description",
+            "example": "Extract invoice data fields"
+          },
+          "fields": {
+            "type": "array",
+            "description": "List of fields to extract",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "invoice_number"
+                },
+                "title": {
+                  "type": "string",
+                  "example": "Invoice Number"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "string",
+                    "number",
+                    "boolean",
+                    "object",
+                    "array"
+                  ],
+                  "example": "string"
+                },
+                "nullable": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "required": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}
