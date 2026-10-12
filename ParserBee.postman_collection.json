@@ -100,6 +100,124 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Templates",
+      "description": "Parser Templates define the fields to extract. Create them in the dashboard; read them here.",
+      "item": [
+        {
+          "name": "List templates",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/templates",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "templates"
+              ]
+            },
+            "description": "Every Parser Template in the account, newest first."
+          },
+          "response": []
+        },
+        {
+          "name": "Get a template",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/templates/{{templateId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "templates",
+                "{{templateId}}"
+              ]
+            },
+            "description": "One Parser Template, with its fields."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Credits",
+      "item": [
+        {
+          "name": "Get page credits",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/credits",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "credits"
+              ]
+            },
+            "description": "Page credit balance, plan and subscription status."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Activity",
+      "item": [
+        {
+          "name": "List recent activity",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/activity",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "activity"
+              ]
+            },
+            "description": "The last 10 extraction requests, newest first."
+          },
+          "response": []
+        },
+        {
+          "name": "Get an activity record",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/activity/{{requestId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "activity",
+                "{{requestId}}"
+              ]
+            },
+            "description": "One extraction request, including the extracted data."
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [
