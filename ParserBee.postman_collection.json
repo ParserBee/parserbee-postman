@@ -63,7 +63,100 @@
               ]
             }
           },
-          "response": [],
+          "response": [
+            {
+              "name": "200 Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/extract",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "extract"
+                  ]
+                },
+                "description": "Upload a PDF, scan or phone photo. Choose the file in the `file` row of the Body tab.\n\nThe extracted fields are in `data`. `usage` shows the pages processed and the page credits charged.",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "template_id",
+                      "value": "{{templateId}}",
+                      "type": "text"
+                    },
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "src": [],
+                      "description": "PDF, PNG, JPG, WebP or HEIC, up to 50 MB"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"request_id\": \"req_abc123\",\n  \"data\": {\n    \"invoice_number\": \"INV-2026-001\",\n    \"total_amount\": 1500,\n    \"vendor_name\": \"Acme Corp\"\n  },\n  \"credits_remaining\": 449,\n  \"processing_time_ms\": 2400,\n  \"usage\": {\n    \"pages_processed\": 1,\n    \"credits_charged\": 1,\n    \"doc_size_bytes\": 204800\n  }\n}"
+            },
+            {
+              "name": "401 Unauthorized",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/extract",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "extract"
+                  ]
+                },
+                "description": "Upload a PDF, scan or phone photo. Choose the file in the `file` row of the Body tab.\n\nThe extracted fields are in `data`. `usage` shows the pages processed and the page credits charged.",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "template_id",
+                      "value": "{{templateId}}",
+                      "type": "text"
+                    },
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "src": [],
+                      "description": "PDF, PNG, JPG, WebP or HEIC, up to 50 MB"
+                    }
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Invalid API key\",\n  \"code\": \"INVALID_API_KEY\"\n}"
+            }
+          ],
           "event": [
             {
               "listen": "test",
@@ -114,7 +207,96 @@
               }
             }
           },
-          "response": [],
+          "response": [
+            {
+              "name": "200 Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/extract",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "extract"
+                  ]
+                },
+                "description": "Send a public link to the document instead of uploading it. The link must open without a login.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"template_id\": \"{{templateId}}\",\n  \"file_url\": \"{{fileUrl}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"request_id\": \"req_abc123\",\n  \"data\": {\n    \"invoice_number\": \"INV-2026-001\",\n    \"total_amount\": 1500,\n    \"vendor_name\": \"Acme Corp\"\n  },\n  \"credits_remaining\": 449,\n  \"processing_time_ms\": 2400,\n  \"usage\": {\n    \"pages_processed\": 1,\n    \"credits_charged\": 1,\n    \"doc_size_bytes\": 204800\n  }\n}"
+            },
+            {
+              "name": "401 Unauthorized",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/extract",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "extract"
+                  ]
+                },
+                "description": "Send a public link to the document instead of uploading it. The link must open without a login.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"template_id\": \"{{templateId}}\",\n  \"file_url\": \"{{fileUrl}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Invalid API key\",\n  \"code\": \"INVALID_API_KEY\"\n}"
+            }
+          ],
           "event": [
             {
               "listen": "test",
@@ -157,7 +339,68 @@
             },
             "description": "Every Parser Template in the account, newest first."
           },
-          "response": [],
+          "response": [
+            {
+              "name": "200 Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/templates",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "templates"
+                  ]
+                },
+                "description": "Every Parser Template in the account, newest first."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"items\": [\n    {\n      \"id\": \"tpl_abc123\",\n      \"name\": \"Invoice Template\",\n      \"description\": \"Extract invoice data fields\",\n      \"fields\": [\n        {\n          \"name\": \"invoice_number\",\n          \"title\": \"Invoice Number\",\n          \"type\": \"string\",\n          \"nullable\": false,\n          \"required\": true\n        }\n      ],\n      \"created\": \"2026-10-19T09:30:00Z\",\n      \"updated\": \"2026-10-19T09:30:00Z\"\n    }\n  ],\n  \"total\": 3\n}"
+            },
+            {
+              "name": "401 Unauthorized",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/templates",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "templates"
+                  ]
+                },
+                "description": "Every Parser Template in the account, newest first."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Invalid API key\",\n  \"code\": \"INVALID_API_KEY\"\n}"
+            }
+          ],
           "event": [
             {
               "listen": "test",
@@ -195,7 +438,70 @@
             },
             "description": "One Parser Template, with its fields."
           },
-          "response": [],
+          "response": [
+            {
+              "name": "200 Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/templates/{{templateId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "templates",
+                    "{{templateId}}"
+                  ]
+                },
+                "description": "One Parser Template, with its fields."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"id\": \"tpl_abc123\",\n  \"name\": \"Invoice Template\",\n  \"description\": \"Extract invoice data fields\",\n  \"fields\": [\n    {\n      \"name\": \"invoice_number\",\n      \"title\": \"Invoice Number\",\n      \"type\": \"string\",\n      \"nullable\": false,\n      \"required\": true\n    }\n  ],\n  \"created\": \"2026-10-19T09:30:00Z\",\n  \"updated\": \"2026-10-19T09:30:00Z\"\n}"
+            },
+            {
+              "name": "404 Not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/templates/{{templateId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "templates",
+                    "{{templateId}}"
+                  ]
+                },
+                "description": "One Parser Template, with its fields."
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Template not found or you don't have access to it\",\n  \"code\": \"TEMPLATE_NOT_FOUND\"\n}"
+            }
+          ],
           "event": [
             {
               "listen": "test",
@@ -214,6 +520,7 @@
     },
     {
       "name": "Credits",
+      "description": "Check your remaining page credits, total credits for the billing period, and subscription plan. Each extraction costs 1 page credit per page processed (minimum 1).",
       "item": [
         {
           "name": "Get page credits",
@@ -233,7 +540,68 @@
             },
             "description": "Page credit balance, plan and subscription status."
           },
-          "response": [],
+          "response": [
+            {
+              "name": "200 Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/credits",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "credits"
+                  ]
+                },
+                "description": "Page credit balance, plan and subscription status."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"credits_remaining\": 450,\n  \"credits_total\": 500,\n  \"subscription_plan\": \"starter\",\n  \"subscription_status\": \"active\"\n}"
+            },
+            {
+              "name": "401 Unauthorized",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/credits",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "credits"
+                  ]
+                },
+                "description": "Page credit balance, plan and subscription status."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Invalid API key\",\n  \"code\": \"INVALID_API_KEY\"\n}"
+            }
+          ],
           "event": [
             {
               "listen": "test",
@@ -252,6 +620,7 @@
     },
     {
       "name": "Activity",
+      "description": "Look up recent extraction requests and the full record for a single request, including status, pages processed and credits charged. Use the `request_id` returned by an extraction as `requestId`.",
       "item": [
         {
           "name": "List recent activity",
@@ -271,7 +640,68 @@
             },
             "description": "The last 10 extraction requests, newest first."
           },
-          "response": [],
+          "response": [
+            {
+              "name": "200 Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/activity",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "activity"
+                  ]
+                },
+                "description": "The last 10 extraction requests, newest first."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"items\": [\n    {\n      \"id\": \"abc123def456\",\n      \"status\": \"success\",\n      \"file_name\": \"invoice.pdf\",\n      \"file_type\": \"application/pdf\",\n      \"file_size\": 204800,\n      \"template\": \"tpl_xyz789\",\n      \"processing_time_ms\": 2400,\n      \"created\": \"2026-10-19T09:30:00Z\"\n    }\n  ],\n  \"total\": 10\n}"
+            },
+            {
+              "name": "401 Unauthorized",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/activity",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "activity"
+                  ]
+                },
+                "description": "The last 10 extraction requests, newest first."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Invalid API key\",\n  \"code\": \"INVALID_API_KEY\"\n}"
+            }
+          ],
           "event": [
             {
               "listen": "test",
@@ -305,7 +735,70 @@
             },
             "description": "One extraction request, including the extracted data."
           },
-          "response": [],
+          "response": [
+            {
+              "name": "200 Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/activity/{{requestId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "activity",
+                    "{{requestId}}"
+                  ]
+                },
+                "description": "One extraction request, including the extracted data."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"id\": \"abc123def456\",\n  \"status\": \"success\",\n  \"file_name\": \"invoice.pdf\",\n  \"file_type\": \"application/pdf\",\n  \"file_size\": 204800,\n  \"template\": \"tpl_xyz789\",\n  \"processing_time_ms\": 2400,\n  \"extracted_data\": {\n    \"invoice_number\": \"INV-2026-001\",\n    \"total_amount\": 1500,\n    \"vendor_name\": \"Acme Corp\"\n  },\n  \"api_key_used\": \"****pk_x\",\n  \"created\": \"2026-10-19T09:30:00Z\",\n  \"updated\": \"2026-10-19T09:30:00Z\"\n}"
+            },
+            {
+              "name": "401 Unauthorized",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/activity/{{requestId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "activity",
+                    "{{requestId}}"
+                  ]
+                },
+                "description": "One extraction request, including the extracted data."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Invalid API key\",\n  \"code\": \"INVALID_API_KEY\"\n}"
+            }
+          ],
           "event": [
             {
               "listen": "test",

@@ -4,6 +4,12 @@ A ready-made [Postman](https://www.postman.com) collection for the [ParserBee](h
 
 The repository also has an OpenAPI 3.1 file, `openapi.json`, for Insomnia, Bruno, Hoppscotch or a code generator.
 
+## Run in Postman
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://www.postman.com/parserbee/parserbee-api)
+
+The collection is published in the public [ParserBee API workspace](https://www.postman.com/parserbee/parserbee-api) on the Postman API Network. Fork it from there to get updates, or import the files in this repository as described in [Set up](#set-up). Every request has saved example responses, so you can see the shape of each answer before you add your API key.
+
 ## What is in the collection
 
 | Folder | Request | Endpoint |
